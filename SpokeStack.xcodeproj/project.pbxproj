@@ -80,26 +80,6 @@
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		01AC1538216BB6AA001B9146 /* Copy Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-			);
-			name = "Copy Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		01B2B42921ADC7AC00289890 /* Copy the Google Dependencies */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-			);
-			name = "Copy the Google Dependencies";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -356,7 +336,6 @@
 				011C191A216BCA3200DB36FD /* Frameworks */,
 				011C191B216BCA3200DB36FD /* Resources */,
 				011C1947216BDBE000DB36FD /* Embed Frameworks */,
-				01B2B42921ADC7AC00289890 /* Copy the Google Dependencies */,
 			);
 			buildRules = (
 			);
@@ -376,7 +355,6 @@
 				01D31F37216BAF260055FD45 /* Sources */,
 				01D31F38216BAF260055FD45 /* Frameworks */,
 				01D31F39216BAF260055FD45 /* Resources */,
-				01AC1538216BB6AA001B9146 /* Copy Frameworks */,
 			);
 			buildRules = (
 			);
@@ -569,19 +547,18 @@
 /* Begin XCBuildConfiguration section */
 		011C192D216BCA3200DB36FD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 01D31F57216BAF680055FD45 /* SpokeStackiOSConfig.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
 				DEVELOPMENT_TEAM = S55ZL97588;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = "";
+				GCC_PREPROCESSOR_DEFINITIONS = "";
 				INFOPLIST_FILE = SpokeStackFrameworkExample/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.pylon.SpokeStackFrameworkExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
@@ -591,19 +568,18 @@
 		};
 		011C192E216BCA3200DB36FD /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 01D31F57216BAF680055FD45 /* SpokeStackiOSConfig.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
 				DEVELOPMENT_TEAM = S55ZL97588;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = "";
+				GCC_PREPROCESSOR_DEFINITIONS = "";
 				INFOPLIST_FILE = SpokeStackFrameworkExample/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.pylon.SpokeStackFrameworkExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
@@ -670,7 +646,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				VALID_ARCHS = "arm64 arm64e armv7 armv7s x86";
+				VALID_ARCHS = "arm64 arm64e armv7 armv7s";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -729,7 +705,7 @@
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VALIDATE_PRODUCT = YES;
-				VALID_ARCHS = "arm64 arm64e armv7 armv7s x86";
+				VALID_ARCHS = "arm64 arm64e armv7 armv7s";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -737,7 +713,6 @@
 		};
 		01D31F50216BAF260055FD45 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 01D31F57216BAF680055FD45 /* SpokeStackiOSConfig.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -748,44 +723,13 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Frameworks/gRPC-RxLibrary",
-					"$(PROJECT_DIR)/Frameworks/gRPC-ProtoRPC",
-					"$(PROJECT_DIR)/Frameworks/googleapis",
-					"$(PROJECT_DIR)/Frameworks/gRPC",
-					"$(PROJECT_DIR)/Frameworks/BoringSSL-GRPC",
-					"$(PROJECT_DIR)/Frameworks/nanopb",
-					"$(PROJECT_DIR)/Frameworks/Protobuf",
-					"$(PROJECT_DIR)/Frameworks/gRPC-Core",
-				);
+				FRAMEWORK_SEARCH_PATHS = "";
+				GCC_PREPROCESSOR_DEFINITIONS = "";
 				INFOPLIST_FILE = SpokeStack/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-framework",
-					"\"GRPCClient\"",
-					"-framework",
-					"\"ProtoRPC\"",
-					"-framework",
-					"\"Protobuf\"",
-					"-framework",
-					"\"RxLibrary\"",
-					"-framework",
-					"\"googleapis\"",
-					"-framework",
-					"\"grpc\"",
-					"-framework",
-					"\"nanopb\"",
-					"-framework",
-					"\"openssl\"",
-					"-ObjC",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.pylon.SpokeStack;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -797,7 +741,6 @@
 		};
 		01D31F51216BAF260055FD45 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 01D31F57216BAF680055FD45 /* SpokeStackiOSConfig.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
@@ -808,44 +751,13 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Frameworks/gRPC-RxLibrary",
-					"$(PROJECT_DIR)/Frameworks/gRPC-ProtoRPC",
-					"$(PROJECT_DIR)/Frameworks/googleapis",
-					"$(PROJECT_DIR)/Frameworks/gRPC",
-					"$(PROJECT_DIR)/Frameworks/BoringSSL-GRPC",
-					"$(PROJECT_DIR)/Frameworks/nanopb",
-					"$(PROJECT_DIR)/Frameworks/Protobuf",
-					"$(PROJECT_DIR)/Frameworks/gRPC-Core",
-				);
+				FRAMEWORK_SEARCH_PATHS = "";
+				GCC_PREPROCESSOR_DEFINITIONS = "";
 				INFOPLIST_FILE = SpokeStack/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-framework",
-					"\"GRPCClient\"",
-					"-framework",
-					"\"ProtoRPC\"",
-					"-framework",
-					"\"Protobuf\"",
-					"-framework",
-					"\"RxLibrary\"",
-					"-framework",
-					"\"googleapis\"",
-					"-framework",
-					"\"grpc\"",
-					"-framework",
-					"\"nanopb\"",
-					"-framework",
-					"\"openssl\"",
-					"-ObjC",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.pylon.SpokeStack;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -856,28 +768,16 @@
 		};
 		01D31F53216BAF260055FD45 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 01D31F57216BAF680055FD45 /* SpokeStackiOSConfig.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = S55ZL97588;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Frameworks/gRPC-RxLibrary",
-					"$(PROJECT_DIR)/Frameworks/gRPC-ProtoRPC",
-					"$(PROJECT_DIR)/Frameworks/googleapis",
-					"$(PROJECT_DIR)/Frameworks/gRPC",
-					"$(PROJECT_DIR)/Frameworks/BoringSSL-GRPC",
-					"$(PROJECT_DIR)/Frameworks/nanopb",
-					"$(PROJECT_DIR)/Frameworks/Protobuf",
-					"$(PROJECT_DIR)/Frameworks/gRPC-Core",
-				);
+				FRAMEWORK_SEARCH_PATHS = "";
+				GCC_PREPROCESSOR_DEFINITIONS = "";
 				INFOPLIST_FILE = SpokeStackTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.pylon.SpokeStackTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
@@ -887,28 +787,16 @@
 		};
 		01D31F54216BAF260055FD45 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 01D31F57216BAF680055FD45 /* SpokeStackiOSConfig.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = S55ZL97588;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Frameworks/gRPC-RxLibrary",
-					"$(PROJECT_DIR)/Frameworks/gRPC-ProtoRPC",
-					"$(PROJECT_DIR)/Frameworks/googleapis",
-					"$(PROJECT_DIR)/Frameworks/gRPC",
-					"$(PROJECT_DIR)/Frameworks/BoringSSL-GRPC",
-					"$(PROJECT_DIR)/Frameworks/nanopb",
-					"$(PROJECT_DIR)/Frameworks/Protobuf",
-					"$(PROJECT_DIR)/Frameworks/gRPC-Core",
-				);
+				FRAMEWORK_SEARCH_PATHS = "";
+				GCC_PREPROCESSOR_DEFINITIONS = "";
 				INFOPLIST_FILE = SpokeStackTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.pylon.SpokeStackTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
