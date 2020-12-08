@@ -110,7 +110,6 @@ import Speech
             with: recognitionRequest!,
             resultHandler: { [weak self] result, error in
                 guard let strongSelf = self else {
-                    assertionFailure("AppleSpeechRecognizer recognitionTask resultHandler strongSelf is nil")
                     return
                 }
                 guard let _ = strongSelf.recognitionTask else {
@@ -118,7 +117,6 @@ import Speech
                     return
                 }
                 guard let delegate = strongSelf.delegate else {
-                    assertionFailure("AppleSpeechRecognizer recognitionTask resultHandler delegate is nil")
                     return
                 }
                 strongSelf.vadFallWorker?.cancel()
