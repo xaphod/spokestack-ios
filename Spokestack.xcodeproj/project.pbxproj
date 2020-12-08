@@ -230,10 +230,10 @@
 		59FB0C8A22AEE4F100FB9662 /* Data+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Extensions.swift"; sourceTree = "<group>"; };
 		59FB0C8C22B0640700FB9662 /* RingBuffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RingBuffer.swift; sourceTree = "<group>"; };
 		59FB0C8E22B0682900FB9662 /* FFT.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FFT.swift; sourceTree = "<group>"; };
-		59FE4A8C2480580900976825 /* mock_nlu.tflite */ = {isa = PBXFileReference; lastKnownFileType = file; path = mock_nlu.tflite; sourceTree = "<group>"; };
-		59FE4A8D2480580900976825 /* mock_encoder.tflite */ = {isa = PBXFileReference; lastKnownFileType = file; path = mock_encoder.tflite; sourceTree = "<group>"; };
-		59FE4A9224805EA300976825 /* mock_filter.tflite */ = {isa = PBXFileReference; lastKnownFileType = file; path = mock_filter.tflite; sourceTree = "<group>"; };
-		59FE4A9624805F5F00976825 /* mock_detector.tflite */ = {isa = PBXFileReference; lastKnownFileType = file; path = mock_detector.tflite; sourceTree = "<group>"; };
+		59FE4A8C2480580900976825 /* mock_nlu.tflite */ = {isa = PBXFileReference; lastKnownFileType = text; path = mock_nlu.tflite; sourceTree = "<group>"; };
+		59FE4A8D2480580900976825 /* mock_encoder.tflite */ = {isa = PBXFileReference; lastKnownFileType = text; path = mock_encoder.tflite; sourceTree = "<group>"; };
+		59FE4A9224805EA300976825 /* mock_filter.tflite */ = {isa = PBXFileReference; lastKnownFileType = text; path = mock_filter.tflite; sourceTree = "<group>"; };
+		59FE4A9624805F5F00976825 /* mock_detector.tflite */ = {isa = PBXFileReference; lastKnownFileType = text; path = mock_detector.tflite; sourceTree = "<group>"; };
 		87E00C354EAE6F97CE48B5AE /* Pods-SpokestackFrameworkExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpokestackFrameworkExample.release.xcconfig"; path = "Target Support Files/Pods-SpokestackFrameworkExample/Pods-SpokestackFrameworkExample.release.xcconfig"; sourceTree = "<group>"; };
 		8AF5D54B4D2482619C28AE68 /* Pods_SpokestackTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SpokestackTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9046EDB03884D7895DE41621 /* Pods-SpokestackFrameworkExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpokestackFrameworkExample.debug.xcconfig"; path = "Target Support Files/Pods-SpokestackFrameworkExample/Pods-SpokestackFrameworkExample.debug.xcconfig"; sourceTree = "<group>"; };
@@ -983,7 +983,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1045,7 +1045,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = NO;
