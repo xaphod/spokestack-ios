@@ -26,7 +26,9 @@ This pipeline component uses the Apple `SFSpeech` API to stream audio samples fo
     
     // MARK: Private properties
     
-    private var phrases: Array<String> = []
+    private var phrases: Array<String> {
+        return self.configuration.wakewords.components(separatedBy: ",")
+    }
     private let speechRecognizer: SFSpeechRecognizer = SFSpeechRecognizer(locale: NSLocale.current)!
     private var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
     private var recognitionTask: SFSpeechRecognitionTask?
@@ -57,8 +59,6 @@ This pipeline component uses the Apple `SFSpeech` API to stream audio samples fo
     }
     
     private func configure() {
-        // wakeword
-        phrases = self.configuration.wakewords.components(separatedBy: ",")
         // Tracing
         self.traceLevel = self.configuration.tracing
     }

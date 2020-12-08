@@ -31,7 +31,7 @@ import Dispatch
     
     /// A list of `SpeechProcessor` instances that process audio frames from `AudioController`.
     private var stages: [SpeechProcessor] = []
-    private var isStarted = false
+    public var isStarted = false
     
     // MARK: Initializers
     
