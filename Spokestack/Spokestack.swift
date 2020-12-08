@@ -20,10 +20,6 @@ import Foundation
 @objc public class Spokestack: NSObject {
     /// This is the client entry point to the Spokestack voice input system.
     @objc public var pipeline: SpeechPipeline
-    /// This is the client entry point for the Spokestack Text to Speech (TTS) system.
-    @objc public var tts: TextToSpeech
-    /// This is the client entry point for the Spokestack BERT NLU implementation.
-    @objc public var nlu: NLUTensorflow
     /// Maintains global state for the speech pipeline.
     @objc public var context: SpeechContext
     /// Configuration properties for Spokestack modules.
@@ -39,13 +35,11 @@ import Foundation
     ///   - pipeline: An initialized SpeechPipeline for the client to access.
     ///   - nlu: An initialized NLUTensorflow for the client to access.
     ///   - tts: An initialized TextToSpeech for the client to access.
-    @objc internal init(delegates: [SpokestackDelegate], configuration: SpeechConfiguration, pipeline: SpeechPipeline, nlu: NLUTensorflow, tts: TextToSpeech, editor: TranscriptEditor?) {
+    @objc internal init(delegates: [SpokestackDelegate], configuration: SpeechConfiguration, pipeline: SpeechPipeline, editor: TranscriptEditor?) {
         self.delegates = delegates
         self.configuration = configuration
         self.pipeline = pipeline
         self.context = pipeline.context
-        self.nlu = nlu
-        self.tts = tts
         self.editor = editor
         super.init()
     }
@@ -59,12 +53,12 @@ extension Spokestack: SpokestackDelegate {
     
     /// An event receiver used to fulfill automatic classification configuration.
     /// - Parameter result: Global state for the speech pipeline.
-    public func didRecognize(_ result: SpeechContext) {
-        if self.configuration.automaticallyClassifyTranscript {
-            let t = self.editor?.editTranscript(transcript: result.transcript) ?? result.transcript
-            self.nlu.classify(utterance: t)
-        }
-    }
+//    public func didRecognize(_ result: SpeechContext) {
+//        if self.configuration.automaticallyClassifyTranscript {
+//            let t = self.editor?.editTranscript(transcript: result.transcript) ?? result.transcript
+//            self.nlu.classify(utterance: t)
+//        }
+//    }
 }
 
 /// Fluent builder interface for configuring Spokestack.
@@ -170,9 +164,7 @@ extension Spokestack: SpokestackDelegate {
             .useProfile(self.pipelineProfile)
             .setConfiguration(self.config)
             .build()
-        let tts = TextToSpeech(self.delegates, configuration: self.config)
-        let nlu = try NLUTensorflow(self.delegates, configuration: self.config)
-        let spokestack = Spokestack(delegates: self.delegates, configuration: self.config, pipeline: pipeline, nlu: nlu, tts: tts, editor: self.editor)
+        let spokestack = Spokestack(delegates: self.delegates, configuration: self.config, pipeline: pipeline, editor: self.editor)
         if self.config.automaticallyClassifyTranscript {
             pipeline.context.addListener(spokestack)
         }

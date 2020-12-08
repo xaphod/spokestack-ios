@@ -79,8 +79,6 @@ import Dispatch
                 return AppleSpeechRecognizer(configuration, context: self.context)
             case .vadTrigger:
                 return VADTrigger(configuration, context: self.context)
-            case .spokestackSpeech:
-                return SpokestackSpeechRecognizer(configuration, context: context)
             }
         }
         

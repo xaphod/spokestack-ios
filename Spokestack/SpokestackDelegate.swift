@@ -40,25 +40,6 @@ import Foundation
     /// The pipeline timeout event. The pipeline experienced a timeout in a component.
     @objc optional func didTimeout() -> Void
     
-    // MARK: TextToSpeech
-    
-    /// The TTS synthesis request has resulted in a successful response.
-    /// - Note: The URL will be invalidated within 60 seconds of generation.
-    /// - Parameter url: The url pointing to the TTS media container
-    @objc optional func success(result: TextToSpeechResult) -> Void
-    
-    /// The TTS synthesis request has begun playback over the default audio system.
-    @objc optional func didBeginSpeaking() -> Void
-    
-    /// The TTS synthesis request has finished playback.
-    @objc optional func didFinishSpeaking() -> Void
-    
-    // MARK: NLU
-    
-    /// The NLU classifier has produced a result.
-    /// - Parameter result: The result of NLU classification.
-    @objc optional func classification(result: NLUResult) -> Void
-    
     // MARK: Tracer
     
     /// The trace event.
