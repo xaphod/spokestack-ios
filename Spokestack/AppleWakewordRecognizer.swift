@@ -37,6 +37,7 @@ This pipeline component uses the Apple `SFSpeech` API to stream audio samples fo
     private var traceLevel: Trace.Level = Trace.Level.NONE
     private let startStopSema = DispatchSemaphore.init(value: 1)
     private var restartTimer: Timer?
+    private var shouldBeStreaming: Bool = false
 
     // MARK: NSObject methods
     
@@ -121,6 +122,12 @@ This pipeline component uses the Apple `SFSpeech` API to stream audio samples fo
                 }
             }
             defer { if !hasSema { self.startStopSema.signal() } }
+            
+            guard self.shouldBeStreaming else {
+                Trace.trace(.DEBUG, message: "AppleWakewordRecognizer startRecognition(), !shouldBeStreaming - NO-OP", config: nil, context: nil, caller: self)
+                return
+            }
+            
             Trace.trace(.DEBUG, message: "AppleWakewordRecognizer startRecognition()", config: nil, context: nil, caller: self)
             try self.audioEngine.start()
             self.recognitionRequest = SFSpeechAudioBufferRecognitionRequest()
@@ -236,6 +243,7 @@ extension AppleWakewordRecognizer: SpeechProcessor {
         defer { self.startStopSema.signal() }
 
         Trace.trace(.DEBUG, message: "AppleWakewordRecognizer startStreaming()", config: nil, context: nil, caller: self)
+        self.shouldBeStreaming = true
         self.prepare()
     }
     
@@ -256,6 +264,7 @@ extension AppleWakewordRecognizer: SpeechProcessor {
         defer { self.startStopSema.signal() }
 
         Trace.trace(.DEBUG, message: "AppleWakewordRecognizer stopStreaming()", config: nil, context: nil, caller: self)
+        self.shouldBeStreaming = false
         self.stopRecognition(hasSema: true)
         self.audioEngine.stop()
         self.audioEngine.inputNode.removeTap(onBus: 0)
