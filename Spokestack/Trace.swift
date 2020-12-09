@@ -28,9 +28,16 @@ public struct Trace {
     /// - Parameter delegate: The delegate that should receive the debugging trace message.
     /// - Parameter context: The context of the speech pipeline.
     /// - Parameter caller: The sender of the debugging trace message.
+    private static let formatter = { () -> DateFormatter in
+        let retval = DateFormatter.init()
+        retval.dateFormat = "yyyy-MM-dd HH:mm:ss.SSSS"
+        return retval
+    }()
     public static func trace(_ level: Trace.Level, message: String, config: SpeechConfiguration?, context: SpeechContext?, caller: Any) {
         if level.rawValue >= config?.tracing.rawValue ?? Level.DEBUG.rawValue {
-            print("speech trace: \(level.rawValue) \(String(describing: type(of: caller))) \(message)")
+            let stringToLog = formatter.string(from: Date()) + " - speech: " + message
+            print(stringToLog)
+
 //            context?.dispatch { $0.didTrace?("\(level.rawValue) \(String(describing: type(of: caller))) \(message)") }
         }
     }

@@ -66,6 +66,7 @@ This pipeline component uses the Apple `SFSpeech` API to stream audio samples fo
     // MARK: Private functions
     
     private func prepare() {
+        Trace.trace(.DEBUG, message: "AppleWakewordRecognizer prepare()", config: nil, context: nil, caller: self)
         let bufferSize: Int = (self.configuration.sampleRate / 1000) * self.configuration.frameWidth
         self.audioEngine.inputNode.removeTap(onBus: 0) // a belt-and-suspenders approach to fixing https://github.com/wenkesj/react-native-voice/issues/46
         self.audioEngine.inputNode.installTap(
@@ -87,6 +88,7 @@ This pipeline component uses the Apple `SFSpeech` API to stream audio samples fo
     
     private func startRecognition() {
         do {
+            Trace.trace(.DEBUG, message: "AppleWakewordRecognizer startRecognition()", config: nil, context: nil, caller: self)
             try self.audioEngine.start()
             self.recognitionRequest = SFSpeechAudioBufferRecognitionRequest()
             self.recognitionRequest?.shouldReportPartialResults = true
@@ -173,11 +175,13 @@ extension AppleWakewordRecognizer: SpeechProcessor {
     
     /// Triggered by the speech pipeline, instructing the recognizer to begin streaming and processing audio.
     @objc public func startStreaming() {
+        Trace.trace(.DEBUG, message: "AppleWakewordRecognizer startStreaming()", config: nil, context: nil, caller: self)
         self.prepare()
     }
     
     /// Triggered by the speech pipeline, instructing the recognizer to stop streaming audio and complete processing.
     @objc public func stopStreaming() {
+        Trace.trace(.DEBUG, message: "AppleWakewordRecognizer stopStreaming()", config: nil, context: nil, caller: self)
         self.stopRecognition()
         self.audioEngine.stop()
         self.audioEngine.inputNode.removeTap(onBus: 0)
