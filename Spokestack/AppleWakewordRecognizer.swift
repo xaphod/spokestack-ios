@@ -152,8 +152,13 @@ This pipeline component uses the Apple `SFSpeech` API to stream audio samples fo
                             case 0..<200: // Apple retry error: https://developer.nuance.com/public/Help/DragonMobileSDKReference_iOS/Error-codes.html
                                 break
                             case 203: // request timed out, retry
-                                strongSelf.stopRecognition()
-                                strongSelf.startRecognition()
+                                if strongSelf.startStopSema.wait(timeout: .now() + 2) == .timedOut {
+                                    Trace.trace(.DEBUG, message: "AppleWakewordRecognizer 203 restart - ERROR, timed out on semaphore", config: nil, context: nil, caller: self)
+                                    return
+                                }
+                                strongSelf.stopRecognition(hasSema: true)
+                                strongSelf.startRecognition(hasSema: true)
+                                strongSelf.startStopSema.signal()
                                 break
                             case 209: // ¯\_(ツ)_/¯
                                 break
@@ -163,7 +168,6 @@ This pipeline component uses the Apple `SFSpeech` API to stream audio samples fo
                                 break
                             default:
                                 strongSelf.context.dispatch { $0.failure(error: e) }
-
                             }
                         }
                     } else {
