@@ -95,6 +95,7 @@ import Speech
     }
     
     private func deactivate() {
+        Trace.trace(.DEBUG, message: "AppleSpeechRecognizer deactivate, self.isActive=\(self.isActive)", config: nil, context: nil, caller: self)
         if self.isActive {
             self.isActive = false
             self.context.isActive = false
@@ -175,6 +176,7 @@ extension AppleSpeechRecognizer: SpeechProcessor {
 
     /// Triggered by the speech pipeline, instructing the recognizer to stop streaming audio and complete processing.
     @objc public func stopStreaming() {
+        Trace.trace(.DEBUG, message: "AppleSpeechRecognizer stopStreaming() isActive=\(self.isActive), calling deactivate()", config: nil, context: nil, caller: self)
         if self.isActive {
             self.deactivate()
             self.recognitionTask?.cancel()

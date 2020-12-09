@@ -101,6 +101,7 @@ This pipeline component uses the Apple `SFSpeech` API to stream audio samples fo
     }
     
     private func stopRecognition() {
+        Trace.trace(.DEBUG, message: "AppleWakewordRecognizer stopRecognition()", config: nil, context: nil, caller: self)
         self.recognitionTaskRunning = false
         self.recognitionTask?.finish()
         self.recognitionTask = nil
