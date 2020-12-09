@@ -34,9 +34,11 @@ public struct Trace {
         return retval
     }()
     public static func trace(_ level: Trace.Level, message: String, config: SpeechConfiguration?, context: SpeechContext?, caller: Any) {
+        #if DEBUG
         if level.rawValue >= config?.tracing.rawValue ?? Level.DEBUG.rawValue {
             let stringToLog = formatter.string(from: Date()) + " - speech: " + message
             print(stringToLog)
+        #endif
 
 //            context?.dispatch { $0.didTrace?("\(level.rawValue) \(String(describing: type(of: caller))) \(message)") }
         }
