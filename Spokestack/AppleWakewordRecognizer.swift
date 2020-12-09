@@ -174,6 +174,7 @@ extension AppleWakewordRecognizer: SpeechProcessor {
     /// Triggered by the speech pipeline, instructing the recognizer to begin streaming and processing audio.
     @objc public func startStreaming() {
         self.prepare()
+        self.startRecognition()
     }
     
     /// Triggered by the speech pipeline, instructing the recognizer to stop streaming audio and complete processing.
@@ -191,7 +192,7 @@ extension AppleWakewordRecognizer: SpeechProcessor {
     /// - Parameter frame: Frame of audio samples.
     @objc public func process(_ frame: Data) -> Void {
         if !self.recognitionTaskRunning && self.context.isSpeech && !self.context.isActive {
-            self.startRecognition()
+//            self.startRecognition()
         } else if context.isActive {
             self.stopRecognition()
         }
