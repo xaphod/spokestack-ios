@@ -86,8 +86,14 @@ This pipeline component uses the Apple `SFSpeech` API to stream audio samples fo
         }
     }
     
+    private let startStopSema = DispatchSemaphore.init(value: 1)
     private func startRecognition() {
         do {
+            if self.startStopSema.wait(timeout: .now() + 2) == .timedOut {
+                Trace.trace(.DEBUG, message: "AppleWakewordRecognizer startRecognition() - ERROR, timed out on semaphore", config: nil, context: nil, caller: self)
+                return
+            }
+            defer { self.startStopSema.signal() }
             Trace.trace(.DEBUG, message: "AppleWakewordRecognizer startRecognition()", config: nil, context: nil, caller: self)
             try self.audioEngine.start()
             self.recognitionRequest = SFSpeechAudioBufferRecognitionRequest()
@@ -102,7 +108,14 @@ This pipeline component uses the Apple `SFSpeech` API to stream audio samples fo
         }
     }
     
-    private func stopRecognition() {
+    private func stopRecognition(hasSema: Bool = false) {
+        if !hasSema {
+            if self.startStopSema.wait(timeout: .now() + 2) == .timedOut {
+                Trace.trace(.DEBUG, message: "AppleWakewordRecognizer stopRecognition() - ERROR, timed out on semaphore", config: nil, context: nil, caller: self)
+                return
+            }
+        }
+        defer { if !hasSema { self.startStopSema.signal() } }
         Trace.trace(.DEBUG, message: "AppleWakewordRecognizer stopRecognition()", config: nil, context: nil, caller: self)
         self.recognitionTaskRunning = false
         self.recognitionTask?.finish()
@@ -175,14 +188,26 @@ extension AppleWakewordRecognizer: SpeechProcessor {
     
     /// Triggered by the speech pipeline, instructing the recognizer to begin streaming and processing audio.
     @objc public func startStreaming() {
+        if self.startStopSema.wait(timeout: .now() + 2) == .timedOut {
+            Trace.trace(.DEBUG, message: "AppleWakewordRecognizer startStreaming() - ERROR, timed out on semaphore", config: nil, context: nil, caller: self)
+            return
+        }
+        defer { self.startStopSema.signal() }
+
         Trace.trace(.DEBUG, message: "AppleWakewordRecognizer startStreaming()", config: nil, context: nil, caller: self)
         self.prepare()
     }
     
     /// Triggered by the speech pipeline, instructing the recognizer to stop streaming audio and complete processing.
     @objc public func stopStreaming() {
+        if self.startStopSema.wait(timeout: .now() + 2) == .timedOut {
+            Trace.trace(.DEBUG, message: "AppleWakewordRecognizer stopStreaming() - ERROR, timed out on semaphore", config: nil, context: nil, caller: self)
+            return
+        }
+        defer { self.startStopSema.signal() }
+
         Trace.trace(.DEBUG, message: "AppleWakewordRecognizer stopStreaming()", config: nil, context: nil, caller: self)
-        self.stopRecognition()
+        self.stopRecognition(hasSema: true)
         self.audioEngine.stop()
         self.audioEngine.inputNode.removeTap(onBus: 0)
         self.dispatchWorker?.cancel()
