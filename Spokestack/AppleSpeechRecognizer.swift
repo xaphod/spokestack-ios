@@ -36,9 +36,15 @@ import Speech
     // MARK: NSObject implementation
     
     deinit {
+        speechRecognizer.delegate = nil
+        if audioSema.wait(timeout: .now() + 10) == .timedOut {
+            Trace.trace(.DEBUG, message: "AppleSpeechRecognizer deinit - ERROR, timed out on semaphore", config: nil, context: nil, caller: self)
+            return
+        }
+        defer { audioSema.signal() }
+
         self.audioEngine.stop()
         self.audioEngine.inputNode.removeTap(onBus: 0)
-        speechRecognizer.delegate = nil
     }
     
     /// Initializes a AppleSpeechRecognizer instance.
@@ -58,6 +64,12 @@ import Speech
     // MARK: Private functions
     
     private func prepare() {
+        if audioSema.wait(timeout: .now() + 2) == .timedOut {
+            Trace.trace(.DEBUG, message: "AppleSpeechRecognizer prepare - ERROR, timed out on semaphore", config: nil, context: nil, caller: self)
+            return
+        }
+        defer { audioSema.signal() }
+
         self.audioEngine.inputNode.removeTap(onBus: 0) // a belt-and-suspenders approach to fixing https://github.com/wenkesj/react-native-voice/issues/46
         self.audioEngine.inputNode.installTap(
             onBus: 0,
@@ -77,6 +89,12 @@ import Speech
     }
     
     private func activate() {
+        if audioSema.wait(timeout: .now() + 2) == .timedOut {
+            Trace.trace(.DEBUG, message: "AppleSpeechRecognizer activate - ERROR, timed out on semaphore", config: nil, context: nil, caller: self)
+            return
+        }
+        defer { audioSema.signal() }
+
         do {
             // Accessing debug information is costly and we don't want to do it unnecessarily, so make a duplicate level check beforehand.
             if self.configuration.tracing.rawValue <= Trace.Level.DEBUG.rawValue {
@@ -105,8 +123,15 @@ import Speech
             self.recognitionTask = nil
             self.recognitionRequest?.endAudio()
             self.recognitionRequest = nil
-            self.audioEngine.stop()
             self.context.dispatch { $0.didDeactivate?() }
+
+            if audioSema.wait(timeout: .now() + 2) == .timedOut {
+                Trace.trace(.DEBUG, message: "AppleSpeechRecognizer deactivate - ERROR, timed out on semaphore", config: nil, context: nil, caller: self)
+                return
+            }
+            defer { audioSema.signal() }
+
+            self.audioEngine.stop()
         }
     }
     
