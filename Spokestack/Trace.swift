@@ -38,10 +38,9 @@ public struct Trace {
         if level.rawValue >= config?.tracing.rawValue ?? Level.DEBUG.rawValue {
             let stringToLog = formatter.string(from: Date()) + " - speech: " + message
             print(stringToLog)
-        #endif
-
 //            context?.dispatch { $0.didTrace?("\(level.rawValue) \(String(describing: type(of: caller))) \(message)") }
         }
+        #endif
     }
     
     /// Traces a message from a Spokestack module.
