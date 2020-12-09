@@ -102,7 +102,7 @@ This pipeline component uses the Apple `SFSpeech` API to stream audio samples fo
             self.recognitionTaskRunning = true
             
             // Automatically restart wakeword task if it goes over Apple's 1 minute listening limit
-            DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + .milliseconds(self.configuration.wakewordRequestTimeout), execute: { if let timeoutWorker = self.dispatchWorker { timeoutWorker.perform() }})
+            DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + .milliseconds(self.configuration.wakewordRequestTimeout), execute: { [weak self] in if let timeoutWorker = self?.dispatchWorker { timeoutWorker.perform() }})
         } catch let error {
             self.context.dispatch { $0.failure(error: error) }
         }
