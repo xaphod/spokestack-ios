@@ -125,19 +125,17 @@ import Speech
                 if let e = error {
                     if let nse: NSError = error as NSError? {
                         if nse.domain == "kAFAssistantErrorDomain" {
+                            Trace.trace(Trace.Level.INFO, message: "speechRecog resultHandler error code \(nse.code)", config: strongSelf.configuration, context: strongSelf.context, caller: strongSelf)
+
                             switch nse.code {
                             case 0..<200: // Apple retry error: https://developer.nuance.com/public/Help/DragonMobileSDKReference_iOS/Error-codes.html
                                 break
                             case 203: // request timed out, retry
-                                Trace.trace(Trace.Level.INFO, message: "resultHandler error 203", config: strongSelf.configuration, context: strongSelf.context, caller: strongSelf)
                                 strongSelf.deactivate()
                                 break
                             case 209: // ¯\_(ツ)_/¯
-                                Trace.trace(Trace.Level.INFO, message: "resultHandler error 209", config: strongSelf.configuration, context: strongSelf.context, caller: strongSelf)
                                 break
                             case 216: // Apple internal error: https://stackoverflow.com/questions/53037789/sfspeechrecognizer-216-error-with-multiple-requests?noredirect=1&lq=1)
-                                Trace.trace(Trace.Level.INFO, message: "resultHandler error 216", config: strongSelf.configuration, context: strongSelf.context, caller: strongSelf)
-                                
                                 break
                             case 300..<603: // Apple retry error: https://developer.nuance.com/public/Help/DragonMobileSDKReference_iOS/Error-codes.html
                                 break

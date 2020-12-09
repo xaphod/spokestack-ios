@@ -123,9 +123,9 @@ This pipeline component uses the Apple `SFSpeech` API to stream audio samples fo
                 if let e = error {
                     if let nse: NSError = error as NSError? {
                         if nse.domain == "kAFAssistantErrorDomain" {
+                            Trace.trace(Trace.Level.INFO, message: "wakeword resultHandler error code \(nse.code)", config: strongSelf.configuration, context: strongSelf.context, caller: strongSelf)
                             switch nse.code {
                             case 0..<200: // Apple retry error: https://developer.nuance.com/public/Help/DragonMobileSDKReference_iOS/Error-codes.html
-                                Trace.trace(Trace.Level.INFO, message: "resultHandler error \(nse.code.description)", config: strongSelf.configuration, context: strongSelf.context, caller: strongSelf)
                                 break
                             case 203: // request timed out, retry
                                 strongSelf.stopRecognition()
@@ -136,7 +136,6 @@ This pipeline component uses the Apple `SFSpeech` API to stream audio samples fo
                             case 216: // Apple internal error: https://stackoverflow.com/questions/53037789/sfspeechrecognizer-216-error-with-multiple-requests?noredirect=1&lq=1)
                                 break
                             case 300..<603: // Apple retry error: https://developer.nuance.com/public/Help/DragonMobileSDKReference_iOS/Error-codes.html
-                                Trace.trace(Trace.Level.INFO, message: "resultHandler error \(nse.code.description)", config: strongSelf.configuration, context: strongSelf.context, caller: strongSelf)
                                 break
                             default:
                                 strongSelf.context.dispatch { $0.failure(error: e) }
