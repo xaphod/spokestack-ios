@@ -36,7 +36,8 @@ This pipeline component uses the Apple `SFSpeech` API to stream audio samples fo
     private var dispatchWorker: DispatchWorkItem?
     private var recognitionTaskRunning: Bool = false
     private var traceLevel: Trace.Level = Trace.Level.NONE
-    
+    private let startStopSema = DispatchSemaphore.init(value: 1)
+
     // MARK: NSObject methods
     
     deinit {
@@ -81,19 +82,26 @@ This pipeline component uses the Apple `SFSpeech` API to stream audio samples fo
         }
         self.audioEngine.prepare()
         self.dispatchWorker = DispatchWorkItem {[weak self] in
-            self?.stopRecognition()
-            self?.startRecognition()
+            guard let self = self else { return }
+            if self.startStopSema.wait(timeout: .now() + 2) == .timedOut {
+                Trace.trace(.DEBUG, message: "AppleWakewordRecognizer dispatchWorker() - ERROR, timed out on semaphore", config: nil, context: nil, caller: self)
+                return
+            }
+            self.stopRecognition(hasSema: true)
+            self.startRecognition(hasSema: true)
+            self.startStopSema.signal()
         }
     }
     
-    private let startStopSema = DispatchSemaphore.init(value: 1)
-    private func startRecognition() {
+    private func startRecognition(hasSema: Bool = false ) {
         do {
-            if self.startStopSema.wait(timeout: .now() + 2) == .timedOut {
-                Trace.trace(.DEBUG, message: "AppleWakewordRecognizer startRecognition() - ERROR, timed out on semaphore", config: nil, context: nil, caller: self)
-                return
+            if !hasSema {
+                if self.startStopSema.wait(timeout: .now() + 2) == .timedOut {
+                    Trace.trace(.DEBUG, message: "AppleWakewordRecognizer startRecognition() - ERROR, timed out on semaphore", config: nil, context: nil, caller: self)
+                    return
+                }
             }
-            defer { self.startStopSema.signal() }
+            defer { if !hasSema { self.startStopSema.signal() } }
             Trace.trace(.DEBUG, message: "AppleWakewordRecognizer startRecognition()", config: nil, context: nil, caller: self)
             try self.audioEngine.start()
             self.recognitionRequest = SFSpeechAudioBufferRecognitionRequest()
