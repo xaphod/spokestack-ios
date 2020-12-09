@@ -33,10 +33,10 @@ This pipeline component uses the Apple `SFSpeech` API to stream audio samples fo
     private var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
     private var recognitionTask: SFSpeechRecognitionTask?
     private let audioEngine: AVAudioEngine = AVAudioEngine()
-    private var dispatchWorker: DispatchWorkItem?
     private var recognitionTaskRunning: Bool = false
     private var traceLevel: Trace.Level = Trace.Level.NONE
     private let startStopSema = DispatchSemaphore.init(value: 1)
+    private var restartTimer: Timer?
 
     // MARK: NSObject methods
     
@@ -81,10 +81,21 @@ This pipeline component uses the Apple `SFSpeech` API to stream audio samples fo
             strongSelf.recognitionRequest?.append(buffer)
         }
         self.audioEngine.prepare()
-        self.dispatchWorker = DispatchWorkItem {[weak self] in
-            guard let self = self else { return }
+        self.startRestartTimer()
+    }
+    
+    private func startRestartTimer() {
+        DispatchQueue.main.async {
+            self.restartTimer?.invalidate()
+            self.restartTimer = Timer.scheduledTimer(timeInterval: TimeInterval(self.configuration.wakewordRequestTimeout) / 1000.0, target: self, selector: #selector(self.restart), userInfo: nil, repeats: false)
+        }
+    }
+    
+    @objc private func restart() {
+        DispatchQueue.global(qos: .userInitiated).async {
+            Trace.trace(.DEBUG, message: "AppleWakewordRecognizer restart()", config: nil, context: nil, caller: self)
             if self.startStopSema.wait(timeout: .now() + 2) == .timedOut {
-                Trace.trace(.DEBUG, message: "AppleWakewordRecognizer dispatchWorker() - ERROR, timed out on semaphore", config: nil, context: nil, caller: self)
+                Trace.trace(.DEBUG, message: "AppleWakewordRecognizer restart() - ERROR, timed out on semaphore", config: nil, context: nil, caller: self)
                 return
             }
             self.stopRecognition(hasSema: true)
@@ -110,7 +121,7 @@ This pipeline component uses the Apple `SFSpeech` API to stream audio samples fo
             self.recognitionTaskRunning = true
             
             // Automatically restart wakeword task if it goes over Apple's 1 minute listening limit
-            DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + .milliseconds(self.configuration.wakewordRequestTimeout), execute: { [weak self] in if let timeoutWorker = self?.dispatchWorker { timeoutWorker.perform() }})
+            self.startRestartTimer()
         } catch let error {
             self.context.dispatch { $0.failure(error: error) }
         }
@@ -125,6 +136,8 @@ This pipeline component uses the Apple `SFSpeech` API to stream audio samples fo
         }
         defer { if !hasSema { self.startStopSema.signal() } }
         Trace.trace(.DEBUG, message: "AppleWakewordRecognizer stopRecognition()", config: nil, context: nil, caller: self)
+        self.restartTimer?.invalidate()
+        self.restartTimer = nil
         self.recognitionTaskRunning = false
         self.recognitionTask?.finish()
         self.recognitionTask = nil
@@ -222,8 +235,6 @@ extension AppleWakewordRecognizer: SpeechProcessor {
         self.stopRecognition(hasSema: true)
         self.audioEngine.stop()
         self.audioEngine.inputNode.removeTap(onBus: 0)
-        self.dispatchWorker?.cancel()
-        self.dispatchWorker = nil
     }
     
     /// Receives a frame of audio samples for processing. Interface between the `SpeechProcessor` and `AudioController` components. Processes audio in an async thread.
