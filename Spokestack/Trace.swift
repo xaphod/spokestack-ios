@@ -30,7 +30,8 @@ public struct Trace {
     /// - Parameter caller: The sender of the debugging trace message.
     public static func trace(_ level: Trace.Level, message: String, config: SpeechConfiguration?, context: SpeechContext?, caller: Any) {
         if level.rawValue >= config?.tracing.rawValue ?? Level.DEBUG.rawValue {
-            context?.dispatch { $0.didTrace?("\(level.rawValue) \(String(describing: type(of: caller))) \(message)") }
+            print("speech trace: \(level.rawValue) \(String(describing: type(of: caller))) \(message)")
+//            context?.dispatch { $0.didTrace?("\(level.rawValue) \(String(describing: type(of: caller))) \(message)") }
         }
     }
     
