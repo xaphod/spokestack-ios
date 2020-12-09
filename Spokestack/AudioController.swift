@@ -10,6 +10,8 @@ import Foundation
 import AVFoundation
 import Dispatch
 
+internal let audioSema = DispatchSemaphore.init(value: 1)
+
 /// DispatchQueue for handling Spokestack audio processing
 internal let audioProcessingQueue: DispatchQueue = DispatchQueue(label: "io.spokestack.audiocontroller", qos: .userInteractive)
 
@@ -115,6 +117,13 @@ class AudioController {
     /// Begin sending audio frames to the AudioControllerDelegate.
     /// - SeeAlso: AudioControllerDelegate
     func startStreaming() -> Void {
+        if audioSema.wait(timeout: .now() + 2) == .timedOut {
+            Trace.trace(.DEBUG, message: "AudioController startStreaming() - ERROR, timed out on semaphore", config: nil, context: nil, caller: self)
+            self.context?.dispatch { $0.failure(error: AudioError.audioController("AudioController was busy, could not start")) }
+            return
+        }
+        defer { audioSema.signal() }
+
         self.checkAudioSession()
         do {
             try self.start()
@@ -128,6 +137,13 @@ class AudioController {
     /// Stop sending audio frames to the AudioControllerDelegate.
     /// - SeeAlso: AudioControllerDelegate
     func stopStreaming() -> Void {
+        if audioSema.wait(timeout: .now() + 2) == .timedOut {
+            Trace.trace(.DEBUG, message: "AudioController stopStreaming() - ERROR, timed out on semaphore", config: nil, context: nil, caller: self)
+            self.context?.dispatch { $0.failure(error: AudioError.audioController("AudioController was busy, could not stop")) }
+            return
+        }
+        defer { audioSema.signal() }
+
         do {
             try self.stop()
         } catch AudioError.audioSessionSetup(let message) {
