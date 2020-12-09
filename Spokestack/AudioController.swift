@@ -26,44 +26,46 @@ func recordingCallback(
     inNumberFrames: UInt32,
     ioData: UnsafeMutablePointer<AudioBufferList>?) -> OSStatus {
 
-    guard let remoteIOUnit: AudioComponentInstance = AudioController.sharedInstance.remoteIOUnit else {
-        return kAudioServicesSystemSoundUnspecifiedError
-    }
-    var status: OSStatus = noErr
-    let channelCount: UInt32 = 1
-    let bufferSize = inNumberFrames * 2
-    var bufferList = AudioBufferList()
-    bufferList.mNumberBuffers = channelCount
-    bufferList.mBuffers.mNumberChannels = 1
-    bufferList.mBuffers.mDataByteSize = bufferSize
-    bufferList.mBuffers.mData = nil
-    AudioController.sharedInstance.configuration?.audioEngineBufferSize = bufferSize
-    
-    return withUnsafeMutablePointer(to: &bufferList) { (buffers) -> OSStatus in
-        // render the recorded samples into the AudioBuffers
-        status = AudioUnitRender(remoteIOUnit,
-                                 ioActionFlags,
-                                 inTimeStamp,
-                                 inBusNumber,
-                                 inNumberFrames,
-                                 buffers)
-        // verify that the rendering did not error
-        if status != noErr {
-            return status
+    autoreleasepool {
+        guard let remoteIOUnit: AudioComponentInstance = AudioController.sharedInstance.remoteIOUnit else {
+            return kAudioServicesSystemSoundUnspecifiedError
         }
-        // convert the samples into Data and send to the stages
-        if let samples = buffers.pointee.mBuffers.mData {
-            let data: Data = Data(bytes: samples, count: Int(bufferSize))
-            // NB: errors like
-            // AUBuffer.h:61:GetBufferList: EXCEPTION (-1) [mPtrState == kPtrsInvalid is false]: ""
-            // are irrelevant
-            audioProcessingQueue.sync {
-                AudioController.sharedInstance.stages.forEach { stage in
-                    stage.process(data)
+        var status: OSStatus = noErr
+        let channelCount: UInt32 = 1
+        let bufferSize = inNumberFrames * 2
+        var bufferList = AudioBufferList()
+        bufferList.mNumberBuffers = channelCount
+        bufferList.mBuffers.mNumberChannels = 1
+        bufferList.mBuffers.mDataByteSize = bufferSize
+        bufferList.mBuffers.mData = nil
+        AudioController.sharedInstance.configuration?.audioEngineBufferSize = bufferSize
+        
+        return withUnsafeMutablePointer(to: &bufferList) { (buffers) -> OSStatus in
+            // render the recorded samples into the AudioBuffers
+            status = AudioUnitRender(remoteIOUnit,
+                                     ioActionFlags,
+                                     inTimeStamp,
+                                     inBusNumber,
+                                     inNumberFrames,
+                                     buffers)
+            // verify that the rendering did not error
+            if status != noErr {
+                return status
+            }
+            // convert the samples into Data and send to the stages
+            if let samples = buffers.pointee.mBuffers.mData {
+                let data: Data = Data(bytes: samples, count: Int(bufferSize))
+                // NB: errors like
+                // AUBuffer.h:61:GetBufferList: EXCEPTION (-1) [mPtrState == kPtrsInvalid is false]: ""
+                // are irrelevant
+                audioProcessingQueue.sync {
+                    AudioController.sharedInstance.stages.forEach { stage in
+                        stage.process(data)
+                    }
                 }
             }
+            return noErr
         }
-        return noErr
     }
 }
 
