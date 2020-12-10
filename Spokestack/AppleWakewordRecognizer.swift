@@ -86,6 +86,7 @@ This pipeline component uses the Apple `SFSpeech` API to stream audio samples fo
     }
     
     private func startRestartTimer() {
+        guard self.shouldBeStreaming else { return }
         DispatchQueue.main.async {
             self.restartTimer?.invalidate()
             self.restartTimer = Timer.scheduledTimer(timeInterval: TimeInterval(self.configuration.wakewordRequestTimeout) / 1000.0, target: self, selector: #selector(self.restartTimerFired), userInfo: nil, repeats: false)
