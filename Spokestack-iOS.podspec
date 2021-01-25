@@ -8,7 +8,7 @@ Pod::Spec.new do |s|
   s.authors = { 'Spokestack' => 'support@spokestack.io' }
   s.source = { :git => 'https://github.com/spokestack/spokestack-ios.git', :tag => s.version.to_s, :branch => 'release' }
   s.license = {:type => 'Apache', :file => 'LICENSE'}
-  s.ios.deployment_target = '12.4'
+  s.ios.deployment_target = '12.0'
   s.swift_version = '5.0'
   s.ios.framework = 'AVFoundation', 'CoreML'
   s.exclude_files = 'SpokestackFrameworkExample/*.*', 'SpokestackTests/*.*', 'Spokestack/Info.plist'
